@@ -9,8 +9,8 @@ class ValidationError(Exception):
 class SkipTypeCheck(type):
     ...
 
-def convert_with(converter: Callable):
 
+def convert_with(converter: Callable):
     # fmt: off
     def inner(func):
         @wraps(func)
@@ -19,6 +19,7 @@ def convert_with(converter: Callable):
             return func(*new_args, **new_kwargs)
         return inner_inner
     return inner
+
 
 def validate_with(validator: Callable):
     """Decorator that validates args and kwargs passed to the decorated function with the validator.
