@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "validation-decorators"
-version = "0.1.0"
+name = "decorator_validation"
+version = "1.0.0"
 description = ""
-authors = ["ahartlba <andi-bachi@gmx.com>"]
+    authors = ["FailedRobot <sry@nomail.com>"]
 readme = "README.md"
-packages = [{include = "validation_decorators"}]
+packages = [{include = "decorator_validation"}]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"

@@ -22,7 +22,17 @@ def foo(bar: int, message: str, some_additional_info: dict):
 
 # now
 @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
-def foo(bar: int, message: str):
+def foo(bar: int, message: str, , some_additional_info: dict):
+    # begin to code
+```
+
+If of course also supports multiple types:
+
+```python
+from pathlib import Path
+
+@validate_types(path=(str, Path), message=(str,))
+def foo(path: str | Path, message: str):
     # begin to code
 ```
 
