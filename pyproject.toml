@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "validation-decorators"
+version = "0.1.0"
+description = ""
+authors = ["ahartlba <andi-bachi@gmx.com>"]
+readme = "README.md"
+packages = [{include = "validation_decorators"}]
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+flake8 = "^6.1.0"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
