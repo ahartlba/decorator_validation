@@ -47,3 +47,40 @@ def foo(bar: int, message:str, some_additional_info: dict):
     ...
 
 ```
+
+Skip Type-checks by providing the `SkipTypecheck` class as a type, this is very usefull for methods.
+
+```python
+from decorator_validation.decorators import validate_types, SkipTypeCheck
+
+class FileReader:
+
+    @validate_types((SkipTypeCheck,), file_path=(str,))
+    def __init__(self, file_path: str):
+        ...
+
+```
+
+Of course, sometimes you want to have custom error messages.
+Then, just use the following code:
+
+
+```python
+from decorator_validation.decorators import validate_with
+from pathlib import Path
+
+def my_validation_func(obj, file_path:str) -> True:
+    
+    if not isinstance(file_path, str):
+        raise TypeError(...)
+    if not Path(file_path).resolver().is_file():
+        raise ValueError(...)
+    return True
+
+class FileReader:
+
+    @validate_with(my_validation_func)
+    def __init__(self, file_path: str):
+        ...
+
+```

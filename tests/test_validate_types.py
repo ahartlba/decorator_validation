@@ -1,6 +1,7 @@
 import unittest
 from typing import Dict, Union
-from decorator_validation.decorators import validate_types, SkipTypeCheck
+from decorator_validation.decorators import validate_types
+from decorator_validation import SkipTypeCheck
 import logging
 
 
