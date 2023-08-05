@@ -3,6 +3,7 @@ name = "decorator_validation"
 version = "1.0.1"
 description = "Fast Argument validation for functions using decorators"
 authors = ["FailedRobot <sry@nomail.com>"]
+homepage = "https://github.com/ahartlba/decoration_validation"
 readme = "README.md"
 packages = [{include = "decorator_validation"}]
 
