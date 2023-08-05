@@ -21,9 +21,6 @@ jobs:
     - name: Install Package
       run: |
         poetry install --with=dev
-    - name: Source Env
+    - name: Source Env and run tests
       run: |
-        source $(poetry env info --path)/bin/activate
-    - name: Run Tests
-      run: |
-        pytest -v
+        source $(poetry env info --path)/bin/activate && pytest - v
