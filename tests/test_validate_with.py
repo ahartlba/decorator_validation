@@ -41,7 +41,7 @@ class TestConvertWith(unittest.TestCase):
 
         try:
             _ = foo(bar=3.2, message="some string", some_additional_info=dict())
-        except Exception as e:
+        except Exception:
             worked = True
         else:
             worked = False
