@@ -65,13 +65,12 @@ class FileReader:
 Of course, sometimes you want to have custom error messages.
 Then, just use the following code:
 
-
 ```python
 from decorator_validation.decorators import validate_with
 from pathlib import Path
 
 def my_validation_func(obj, file_path:str) -> True:
-    
+
     if not isinstance(file_path, str):
         raise TypeError(...)
     if not Path(file_path).resolve().is_file():
@@ -82,6 +81,46 @@ class FileReader:
 
     @validate_with(my_validation_func)
     def __init__(self, file_path: str):
+        ...
+
+```
+
+## Map Multiple functions for subtypes
+
+You can also directly map different validation functions to your arguments.
+
+```python
+
+from decorator_validation.decorators import validate_map
+from decorator_validation.std_validators import is_file
+
+class FileReader:
+
+    @validate_map(None, file_path=is_file)
+    def __init__(self, file_path: str):
+        ...
+
+```
+
+## Validate Arbitrary Arguments
+
+Starting with version `2.0.0`, the package allows for a single use decorator called `validate`.
+
+Depending on the argument, it will either check the type or use a function to validate.
+If a tuple is used, the standard typecheck will be applied, if not it expectes a Callable that returns a boolean value.
+All of the examples above can be directly copied and just the name of the decorator has to be changed.
+
+An example.
+
+```python
+
+from decorator_validation.decorators import validate
+from decorator_validation.std_validators import is_file
+
+class Logger:
+
+    @validate(file_path=is_file, message:str)
+    def log(file_path: str, message:str):
         ...
 
 ```

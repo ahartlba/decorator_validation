@@ -1,9 +1,26 @@
-from typing import Callable, Tuple, Optional, Dict, Union
+from typing import Callable, Tuple, Optional, Dict, Union, Any
 from functools import wraps
-from decorator_validation.types import ValidationError, SkipTypeCheck
+from decorator_validation.types import ValidationError, SkipTypeCheck, ValidatorType
 
 
-def convert_with(converter: Callable):
+class Validator:
+
+    TYPECHECK = 0
+    CALLABLE_CHECK = 1
+
+    def __init__(self, validator: Union[Tuple, Callable]):
+        self.validator = validator
+
+    def validate(self, input):
+        if isinstance(self.validator, tuple):
+            return self.TYPECHECK, isinstance(input, self.validator)
+        else:
+            if self.validator is None:
+                return self.CALLABLE_CHECK, True
+            return self.CALLABLE_CHECK, self.validator(input)
+
+
+def convert_with(converter: Callable[[Any], Tuple[Tuple, Dict]]):
     # fmt: off
     def inner(func):
         @wraps(func)
@@ -14,7 +31,7 @@ def convert_with(converter: Callable):
     return inner
 
 
-def validate_with(validator: Callable):
+def validate_with(validator: ValidatorType):
     """Decorator that validates args and kwargs passed to the decorated function with the validator.
 
     The Validator has to return either 0, None or False, or directly throw an exception.
@@ -71,6 +88,127 @@ def validate_types(
                 allowed_types = type_kwargs[key]
                 if SkipTypeCheck not in allowed_types and not isinstance(val, allowed_types):
                     raise TypeError(f"Type Mismatch {type(val)} not in {allowed_types}")
+            return func(*args, **kwargs)
+
+        return inner_inner
+
+    return inner
+
+
+def validate_map(
+    *validators: ValidatorType,
+    unpacked_arg_validators: Optional[Union[ValidatorType, None]] = None,
+    **validator_kwargs: Dict[str, ValidatorType],
+):
+    """decorator for fast one-level type-checking
+
+    Parameters
+    ----------
+    types: tuple
+        tuple of allowed types in function
+    unpacked_arg_types : tuple | None, optional
+        types for arguments that come from unpack-operator, by default None
+    type_kwargs
+
+    Raises
+    ------
+    ValidationError
+        if validation did not succeed for any input
+    """
+
+    def inner(func):
+        @wraps(func)
+        def inner_inner(*args, **kwargs):
+            def always_true(x):
+                return True
+
+            if unpacked_arg_validators:
+                zip_ = zip(validators + (unpacked_arg_validators,) * (len(args) - len(validators)), args)
+            else:
+                zip_ = zip(validators + tuple(validator_kwargs.values()), args)
+            for validator, arg in zip_:
+                if validator is None:
+                    validator = always_true
+                if not validator(arg):
+                    raise ValidationError(f"Validation failed ValidationError for arg{arg} with {validator.__name__}")
+            for key, val in kwargs.items():
+                validator = validator_kwargs[key]
+                if validator is None:
+                    validator = always_true
+                if not validator(val):
+                    raise ValidationError(f"Validation failed for parameter {key} with {validator.__name__}")
+            return func(*args, **kwargs)
+
+        return inner_inner
+
+    return inner
+
+
+def validate(
+    *validators: Union[ValidatorType, Dict],
+    unpacked_arg_validators: Optional[Union[ValidatorType, None]] = None,
+    **validator_kwargs: Dict[str, ValidatorType],
+):
+    """decorator for fast one-level type-checking
+
+    Parameters
+    ----------
+    types: tuple
+        tuple of allowed types in function
+    unpacked_arg_types : tuple | None, optional
+        types for arguments that come from unpack-operator, by default None
+    type_kwargs
+
+    Raises
+    ------
+    ValidationError
+        if validation did not succeed for any input
+    """
+
+    def inner(func):
+        if len(validators) == 1 and not unpacked_arg_validators and not validator_kwargs:
+
+            @wraps(func)
+            def inner_inner(*args, **kwargs):
+                if validators[0](*args, **kwargs):
+                    return func(*args, **kwargs)
+                raise ValidationError("Something went wrong")
+
+            return inner_inner
+
+        @wraps(func)
+        def inner_inner(*args, **kwargs):
+            if unpacked_arg_validators:
+                zip_ = zip(validators + (unpacked_arg_validators,) * (len(args) - len(validators)), args)
+            else:
+                zip_ = zip(validators + tuple(validator_kwargs.values()), args)
+            for validation_obj, arg in zip_:
+                validator = Validator(validation_obj)
+                type_of_check, res = validator.validate(arg)
+                if not res:
+                    if type_of_check == Validator.TYPECHECK:
+                        allowed_types = validation_obj
+                        if SkipTypeCheck not in allowed_types and not isinstance(arg, allowed_types):
+                            raise TypeError(f"Type Mismatch {type(arg)} not in {allowed_types}")
+                    else:
+                        if not validation_obj(arg):
+                            raise ValidationError(
+                                f"Validation failed ValidationError for arg{arg} with {validation_obj.__name__}"
+                            )
+            for key, val in kwargs.items():
+                validation_obj = validator_kwargs[key]
+                validator = Validator(validation_obj)
+                type_of_check, res = validator.validate(val)
+                if not res:
+                    if type_of_check == Validator.TYPECHECK:
+                        allowed_types = validation_obj
+                        if SkipTypeCheck not in allowed_types and not isinstance(arg, allowed_types):
+                            raise TypeError(f"Type Mismatch {type(arg)} not in {allowed_types}")
+                    else:
+                        if not validation_obj(val):
+                            raise ValidationError(
+                                f"Validation failed ValidationError for arg{key} with {validation_obj.__name__}"
+                            )
             return func(*args, **kwargs)
 
         return inner_inner
