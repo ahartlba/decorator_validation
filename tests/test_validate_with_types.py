@@ -1,13 +1,13 @@
 import unittest
 from typing import Dict, Union
-from decorator_validation.decorators import validate_types
+from decorator_validation.decorators import validate
 from decorator_validation.types import SkipTypeCheck
 import logging
 
 
 class TestConvertWith(unittest.TestCase):
     def test_correct_types_only_kwargs(self):
-        @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
+        @validate(bar=(int,), message=(str,), some_additional_info=(dict,))
         def foo(bar: int, message: str, some_additional_info: Dict):
             return True
 
@@ -18,7 +18,7 @@ class TestConvertWith(unittest.TestCase):
         self.assertEqual(worked, True)
 
     def test_correct_types_only_args(self):
-        @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
+        @validate(bar=(int,), message=(str,), some_additional_info=(dict,))
         def foo(bar: int, message: str, some_additional_info: Dict):
             return True
 
@@ -30,7 +30,7 @@ class TestConvertWith(unittest.TestCase):
         self.assertEqual(worked, True)
 
     def test_correct_types_mix_args_kwargs(self):
-        @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
+        @validate(bar=(int,), message=(str,), some_additional_info=(dict,))
         def foo(bar: int, message: str, some_additional_info: Dict):
             return True
 
@@ -42,10 +42,11 @@ class TestConvertWith(unittest.TestCase):
             )
         except Exception as e:
             logging.error(e)
+            worked = False
         self.assertEqual(worked, True)
 
     def test_uncorrect_types(self):
-        @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
+        @validate(bar=(int,), message=(str,), some_additional_info=(dict,))
         def foo(bar: int, message: str, some_additional_info: Dict):
             return True
 
@@ -58,7 +59,7 @@ class TestConvertWith(unittest.TestCase):
         self.assertEqual(worked, True)
 
     def test_union_types(self):
-        @validate_types(bar=(int, float), message=(str, bytes), some_additional_info=(dict,))
+        @validate(bar=(int, float), message=(str, bytes), some_additional_info=(dict,))
         def foo(bar: Union[int, float], message: Union[str, bytes], some_additional_info: dict):
             return True
 
@@ -72,7 +73,7 @@ class TestConvertWith(unittest.TestCase):
         self.assertEqual(worked, True)
 
     def test_skip_type_check(self):
-        @validate_types(bar=(SkipTypeCheck,), message=(str, bytes), some_additional_info=(dict,))
+        @validate(bar=(SkipTypeCheck,), message=(str, bytes), some_additional_info=(dict,))
         def foo(bar: Union[int, float], message: Union[str, bytes], some_additional_info: dict):
             return True
 
