@@ -83,8 +83,8 @@ class TestConvertWith(unittest.TestCase):
 
     def test_list_of_numbers(self):
         @validate(
-            list_1=lambda x: all([isinstance(y, Number) for y in x]),
-            list_2=lambda x: all([isinstance(y, Number) for y in x]),
+            list_1=lambda x: all([isinstance(y, (int, float)) for y in x]),
+            list_2=lambda x: all([isinstance(y, (int, float)) for y in x]),
         )
         def foo(list_1: List[Number], list_2: List[Number]):
             return True
@@ -97,8 +97,8 @@ class TestConvertWith(unittest.TestCase):
 
     def test_list_of_numbers_incorrect(self):
         @validate(
-            list_1=lambda x: all([isinstance(y, Number) for y in x]),
-            list_2=lambda x: all([isinstance(y, Number) for y in x]),
+            list_1=lambda x: all([isinstance(y, (int, float)) for y in x]),
+            list_2=lambda x: all([isinstance(y, (int, float)) for y in x]),
         )
         def foo(list_1: List[Number], list_2: List[Number]):
             return True
