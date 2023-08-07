@@ -51,7 +51,8 @@ def foo(bar: int, message:str, some_additional_info: dict):
 Skip Type-checks by providing the `SkipTypecheck` class as a type, this is very usefull for methods.
 
 ```python
-from decorator_validation.decorators import validate_types, SkipTypeCheck
+from decorator_validation.decorators import validate_types
+from decorator_validation.types import SkipTypeCheck
 
 class FileReader:
 
@@ -73,7 +74,7 @@ def my_validation_func(obj, file_path:str) -> True:
     
     if not isinstance(file_path, str):
         raise TypeError(...)
-    if not Path(file_path).resolver().is_file():
+    if not Path(file_path).resolve().is_file():
         raise ValueError(...)
     return True
 

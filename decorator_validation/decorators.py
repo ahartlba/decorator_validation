@@ -1,13 +1,6 @@
 from typing import Callable, Tuple, Optional, Dict, Union
 from functools import wraps
-
-
-class ValidationError(Exception):
-    ...
-
-
-class SkipTypeCheck(type):
-    ...
+from decorator_validation.types import ValidationError, SkipTypeCheck
 
 
 def convert_with(converter: Callable):

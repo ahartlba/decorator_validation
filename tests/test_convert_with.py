@@ -29,7 +29,7 @@ class TestConvertWith(unittest.TestCase):
 
         try:
             _ = foo(dict(bar=3, message="some string", some_additional_info=dict()))
-        except Exception as e:
+        except Exception:
             raised_error = True
         else:
             raised_error = False

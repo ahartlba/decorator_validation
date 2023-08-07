@@ -1,7 +1,7 @@
 import unittest
 from typing import Dict, Union
 from decorator_validation.decorators import validate_types
-from decorator_validation import SkipTypeCheck
+from decorator_validation.types import SkipTypeCheck
 import logging
 
 
@@ -51,7 +51,7 @@ class TestConvertWith(unittest.TestCase):
 
         try:
             _ = foo(dict(bar=3.2, message="some string", some_additional_info=dict()))
-        except TypeError as e:
+        except TypeError:
             worked = True
         else:
             worked = False
