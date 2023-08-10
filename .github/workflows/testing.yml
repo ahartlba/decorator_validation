@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -23,4 +23,4 @@ jobs:
         poetry install --with=dev
     - name: Source Env and run tests
       run: |
-        source $(poetry env info --path)/bin/activate && pytest -v
+        poetry run pytest -v --cov
