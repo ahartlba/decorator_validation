@@ -2,8 +2,16 @@
 
 ![Unittest](https://github.com/ahartlba/decorator_validation/actions/workflows/testing.yml/badge.svg?branch=main)
 ![Static Badge](https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2Fcode%2520style-black-black?label=codestyle)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/decorator-validation)
 
 Simple and fast type-checking and parameter validation.
+
+Install with
+```bash
+pip install decorator-validation
+```
+
+## Why?
 
 Do you want to remove visual clutter in your python function?
 Do you want to check types fast without a lot of boilerplate?
