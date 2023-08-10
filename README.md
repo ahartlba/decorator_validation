@@ -25,7 +25,7 @@ def foo(bar: int, message: str, some_additional_info: dict):
 
 # now
 @validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
-def foo(bar: int, message: str, , some_additional_info: dict):
+def foo(bar: int, message: str, some_additional_info: dict):
     # begin to code
 ```
 
@@ -122,7 +122,7 @@ from decorator_validation.std_validators import is_file
 
 class Logger:
 
-    @validate(file_path=is_file, message(str,))
+    @validate(file_path=is_file, message=(str,))
     def log(file_path: str, message:str):
         ...
 
