@@ -7,6 +7,7 @@
 Simple and fast type-checking and parameter validation.
 
 Install with
+
 ```bash
 pip install decorator-validation
 ```
