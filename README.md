@@ -1,6 +1,6 @@
 # Validation Decorators
 
-![Unittest](https://github.com/ahartlba/decorator_validation/actions/workflows/testing.yml/badge.svg)
+![Unittest](https://github.com/ahartlba/decorator_validation/actions/workflows/testing.yml/badge.svg?branch=main)
 
 Simple and fast type-checking and parameter validation.
 
