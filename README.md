@@ -5,6 +5,13 @@
 
 Simple and fast type-checking and parameter validation.
 
+Install with
+```bash
+pip install decorator-validation
+```
+
+## Why?
+
 Do you want to remove visual clutter in your python function?
 Do you want to check types fast without a lot of boilerplate?
 
