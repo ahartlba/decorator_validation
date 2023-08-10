@@ -1,5 +1,7 @@
 # Validation Decorators
 
+![example workflow](https://github.com/github/docs/actions/workflows/testing.yml/badge.svg)
+
 Simple and fast type-checking and parameter validation.
 
 Do you want to remove visual clutter in your python function?
