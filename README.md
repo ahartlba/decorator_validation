@@ -1,6 +1,6 @@
 # Validation Decorators
 
-![example workflow](https://github.com/ahartlba/decorator_validation/actions/workflows/<WORKFLOW_FILE>/badge.svg)
+![Testing](https://github.com/ahartlba/decorator_validation/actions/workflows/<WORKFLOW_FILE>/badge.svg)
 
 Simple and fast type-checking and parameter validation.
 
