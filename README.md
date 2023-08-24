@@ -3,6 +3,7 @@
 ![Unittest](https://github.com/ahartlba/decorator_validation/actions/workflows/testing.yml/badge.svg?branch=main)
 ![Static Badge](https://img.shields.io/badge/https%3A%2F%2Fimg.shields.io%2Fbadge%2Fcode%2520style-black-black?label=codestyle)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/decorator-validation)
+[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 
 Simple and fast type-checking and parameter validation.
 
