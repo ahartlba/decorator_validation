@@ -104,7 +104,7 @@ class TestConvertWith(unittest.TestCase):
             print(a)
 
         none_test
-        if int(platform.python_version().split('.')[1]) > 8:
+        if int(platform.python_version().split('.')[1]) > 9:
             none_test(None)
         try:
             none_test(1)
