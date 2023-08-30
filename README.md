@@ -41,7 +41,7 @@ def foo(bar: int, message: str, some_additional_info: dict):
 
 Checkout the codebase for more examples and built in decorators!
 
-> __NOTE__: ``check_types`` has limitations for python versions lower than 3.9 due to lack of built in language support for type-checking. Use with caution with special types and None-Types!
+> __NOTE__: ``check_types`` has limitations for python versions lower than 3.10 due to lack of built in language support for type-checking. Use with caution with special types and None-Types!
 
 ## More Examples
 
