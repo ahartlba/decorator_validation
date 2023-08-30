@@ -34,17 +34,23 @@ def foo(bar: int, message: str, some_additional_info: dict):
     # now begin to code...
 
 # now
-@validate_types(bar=(int,), message=(str,), some_additional_info=(dict,))
+@check_types
 def foo(bar: int, message: str, some_additional_info: dict):
     # begin to code
 ```
+
+Checkout the codebase for more examples and built in decorators!
+
+## More Examples
+
+> **Note**: `check_types` is only available since release 2.2.0. for previous releases checkout `validate_types`
 
 If of course also supports multiple types:
 
 ```python
 from pathlib import Path
 
-@validate_types(path=(str, Path), message=(str,))
+@check_types
 def foo(path: str | Path, message: str):
     # begin to code
 ```
