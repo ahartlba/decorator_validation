@@ -1,6 +1,7 @@
 from typing import Callable, Tuple, Optional, Dict, Union, Any
 from functools import wraps
 from decorator_validation.types import ValidationError, SkipTypeCheck, ValidatorType
+import inspect
 
 
 class Validator:
@@ -212,5 +213,24 @@ def validate(
             return func(*args, **kwargs)
 
         return inner_inner
+
+    return inner
+
+
+def check_types(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        _signature = inspect.signature(func)
+        for param, arg in zip(_signature.parameters.values(), args):
+            if not param.annotation == inspect._empty and not isinstance(arg, param.annotation):
+                raise TypeError(
+                    f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
+                )
+        for k, v in kwargs.items():
+            if not isinstance(v, _signature.parameters[k].annotation):
+                raise TypeError(
+                    f"TypeError for Parameter {param.name}: input_type: {type(v)}: required: {param.annotation}"
+                )
+        return func(*args, **kwargs)
 
     return inner
