@@ -222,7 +222,7 @@ def check_types(func):
     def inner(*args, **kwargs):
         _signature = inspect.signature(func)
         for param, arg in zip(_signature.parameters.values(), args):
-            if not isinstance(arg, param.annotation) and not param.annotation == inspect._empty:
+            if not param.annotation == inspect._empty and not isinstance(arg, param.annotation):
                 raise TypeError(
                     f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
                 )

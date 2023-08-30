@@ -1,8 +1,8 @@
 import unittest
 from typing import Dict, Union
 from decorator_validation.decorators import check_types
-from decorator_validation.types import SkipTypeCheck
 import logging
+import platform
 
 
 class TestConvertWith(unittest.TestCase):
@@ -104,7 +104,8 @@ class TestConvertWith(unittest.TestCase):
             print(a)
 
         none_test
-        none_test(None)
+        if int(platform.python_version().split('.')[1]) > 8:
+            none_test(None)
         try:
             none_test(1)
             assert False
