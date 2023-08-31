@@ -227,7 +227,7 @@ def check_types(func):
                     f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
                 )
         for k, v in kwargs.items():
-            if not isinstance(v, _signature.parameters[k].annotation):
+            if not _signature.parameters[k].annotation == inspect._empty and not isinstance(v, _signature.parameters[k].annotation):
                 raise TypeError(
                     f"TypeError for Parameter {param.name}: input_type: {type(v)}: required: {param.annotation}"
                 )
