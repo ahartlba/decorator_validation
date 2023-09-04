@@ -5,7 +5,6 @@ import inspect
 
 
 class Validator:
-
     TYPECHECK = 0
     CALLABLE_CHECK = 1
 
@@ -14,7 +13,7 @@ class Validator:
 
     def validate(self, input):
         if isinstance(self.validator, tuple):
-            return self.TYPECHECK, isinstance(input, self.validator)
+            return self.TYPECHECK, SkipTypeCheck in self.validator or isinstance(input, self.validator)
         else:
             if self.validator is None:
                 return self.CALLABLE_CHECK, True
@@ -217,22 +216,58 @@ def validate(
     return inner
 
 
-def check_types(func):
-    @wraps(func)
-    def inner(*args, **kwargs):
-        _signature = inspect.signature(func)
-        for param, arg in zip(_signature.parameters.values(), args):
-            if not param.annotation == inspect._empty and not isinstance(arg, param.annotation):
-                raise TypeError(
-                    f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
+class Annotation:
+    OVERRIDE = 0
+    SIGNATURE = 1
+
+    def __init__(self, annotation, type):
+        self.annotation = annotation
+        self.type = type
+
+    def type_error_occured(self, input) -> bool:
+        if self.type == Annotation.SIGNATURE:
+            return not self.annotation == inspect._empty and not isinstance(input, self.annotation)
+        elif self.type == Annotation.OVERRIDE:
+            validator = Validator(self.annotation)
+            type_of_check, res = validator.validate(input)
+            if type_of_check == Validator.TYPECHECK:
+                if SkipTypeCheck in input:
+                    return True
+                return not res
+            return not res
+
+
+def check_types(**override_kwargs):
+    def inner(func):
+        @wraps(func)
+        def inner_inner(*args, **kwargs):
+            _signature = inspect.signature(func)
+            for i, (param, arg) in enumerate(zip(_signature.parameters.values(), args)):
+                try:
+                    override = override_kwargs[param.name]
+                except KeyError:
+                    override = None
+                annotation = (
+                    Annotation(param.annotation, Annotation.SIGNATURE)
+                    if not override
+                    else Annotation(override, Annotation.OVERRIDE)
                 )
-        for k, v in kwargs.items():
-            if not _signature.parameters[k].annotation == inspect._empty and not isinstance(
-                v, _signature.parameters[k].annotation
-            ):
-                raise TypeError(
-                    f"TypeError for Parameter {param.name}: input_type: {type(v)}: required: {param.annotation}"
+                if annotation.type_error_occured(arg):
+                    raise TypeError(
+                        f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
+                    )
+            for k, v in kwargs.items():
+                annotation = (
+                    Annotation(_signature.parameters[k].annotation, Annotation.SIGNATURE)
+                    if k not in override_kwargs
+                    else Annotation(override_kwargs[k], Annotation.OVERRIDE)
                 )
-        return func(*args, **kwargs)
+                if annotation.type_error_occured(v):
+                    raise TypeError(
+                        f"TypeError for Parameter {param.name}: input_type: {type(v)}: required: {param.annotation}"
+                    )
+            return func(*args, **kwargs)
+
+        return inner_inner
 
     return inner
