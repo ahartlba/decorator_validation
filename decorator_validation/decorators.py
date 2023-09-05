@@ -257,14 +257,18 @@ def check_types(**override_kwargs):
                         f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
                     )
             for k, v in kwargs.items():
+                try:
+                    override = override_kwargs[k]
+                except KeyError:
+                    override = None
                 annotation = (
                     Annotation(_signature.parameters[k].annotation, Annotation.SIGNATURE)
-                    if k not in override_kwargs
-                    else Annotation(override_kwargs[k], Annotation.OVERRIDE)
+                    if not override
+                    else Annotation(override, Annotation.OVERRIDE)
                 )
                 if annotation.type_error_occured(v):
                     raise TypeError(
-                        f"TypeError for Parameter {param.name}: input_type: {type(v)}: required: {param.annotation}"
+                        f"TypeError for Parameter {k}: input_type: {type(v)}: required: {annotation.annotation}"
                     )
             return func(*args, **kwargs)
 
