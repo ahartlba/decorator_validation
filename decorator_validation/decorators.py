@@ -231,8 +231,8 @@ class Annotation:
             validator = Validator(self.annotation)
             type_of_check, res = validator.validate(input)
             if type_of_check == Validator.TYPECHECK:
-                if SkipTypeCheck in input:
-                    return True
+                if SkipTypeCheck in self.annotation:  # ignore result for SkipTypeCheck
+                    return False
                 return not res
             return not res
 
