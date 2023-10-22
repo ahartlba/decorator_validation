@@ -237,14 +237,17 @@ class Annotation:
             return not res
 
 
-def check_types(**override_kwargs):
-    def inner(func):
+class check_types:
+    def __init__(self, **override_kwargs):
+        self._override_kwargs = override_kwargs
+
+    def __call__(self, func):
         @wraps(func)
-        def inner_inner(*args, **kwargs):
+        def inner(*args, **kwargs):
             _signature = inspect.signature(func)
-            for i, (param, arg) in enumerate(zip(_signature.parameters.values(), args)):
+            for (param, arg) in zip(_signature.parameters.values(), args):
                 try:
-                    override = override_kwargs[param.name]
+                    override = self._override_kwargs[param.name]
                 except KeyError:
                     override = None
                 annotation = (
@@ -259,8 +262,8 @@ def check_types(**override_kwargs):
             for k, v in kwargs.items():
                 annotation = (
                     Annotation(_signature.parameters[k].annotation, Annotation.SIGNATURE)
-                    if k not in override_kwargs
-                    else Annotation(override_kwargs[k], Annotation.OVERRIDE)
+                    if k not in self._override_kwargs
+                    else Annotation(self._override_kwargs[k], Annotation.OVERRIDE)
                 )
                 if annotation.type_error_occured(v):
                     raise TypeError(
@@ -268,6 +271,4 @@ def check_types(**override_kwargs):
                     )
             return func(*args, **kwargs)
 
-        return inner_inner
-
-    return inner
+        return inner
