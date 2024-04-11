@@ -17,7 +17,7 @@ def is_iterable_of(type_: Union[type, Tuple[type]]):
             if not isinstance(a, type_):
                 raise TypeError(
                     f"Argument has to be an iterable with elements of type {type_},\
-                          but an element with type {type(type_)} occured"
+                          but an element with type {type(a)} occured"
                 )
         return True
 
@@ -32,7 +32,7 @@ def is_sequence_of(type_: Union[type, Tuple[type]]):
             if not isinstance(a, type_):
                 raise TypeError(
                     f"Argument has to be a sequence with elements of type {type_},\
-                          but an element with type {type(type_)} occured"
+                          but an element with type {type(a)} occured"
                 )
         return True
 
