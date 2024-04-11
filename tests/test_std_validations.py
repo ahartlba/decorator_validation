@@ -1,7 +1,6 @@
 import unittest
 from decorator_validation.decorators import validate_map, validate
 from decorator_validation.std_validators import is_file, is_iterable_of, is_sequence_of, is_num_as_str
-from decorator_validation.types import ValidationError
 import logging
 from pathlib import Path
 from typing import Iterable, Union, Sequence
@@ -32,7 +31,7 @@ class TestStandardValidations(unittest.TestCase):
             temp.write("hello")
             try:
                 worked = foo(file="test.txt")
-            except ValidationError as e:
+            except TypeError as e:
                 logging.error(e)
                 worked = False
         self.assertEqual(worked, True)
@@ -46,7 +45,7 @@ class TestStandardValidations(unittest.TestCase):
             temp.write("hello")
             try:
                 worked = foo(file="test2.txt")
-            except ValidationError as e:
+            except TypeError as e:
                 logging.error(e)
                 worked = False
         self.assertNotEqual(worked, True)
