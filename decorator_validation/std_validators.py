@@ -4,7 +4,9 @@ from pathlib import Path
 
 def is_file(file: Union[str, Path]) -> bool:
     """check if file is a file"""
-    return Path(file).resolve().is_file()
+    if not Path(file).resolve().is_file():
+        raise TypeError(f"File {file} does not exist!")
+    return True
 
 
 def is_iterable_of(type_: Union[type, Tuple[type]]):

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "decorator_validation"
-version = "3.0.2"
+version = "3.0.3"
 description = "Fast Argument validation for functions using decorators"
 authors = ["FailedRobot <sry@nomail.com>"]
 homepage = "https://github.com/ahartlba/decorator_validation"
