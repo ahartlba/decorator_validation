@@ -49,18 +49,18 @@ Checkout the codebase for more examples and built in decorators!
 
 Of course, sometimes you want to have a custom validation method for all your inputs.
 It just needs to return if the input is valid or not.
+You can use the ``make_validator`` function to shorten the code even more.
 
 ```python
-from decorator_validation import check_types
+from decorator_validation import check_types, make_validator
 from pathlib import Path
 
-def my_validation_func(file_path:str) -> True:
-
+@make_validator
+def my_validation_func(file_path: str) -> True:
     if not isinstance(file_path, str):
         raise TypeError(...)
     if not Path(file_path).resolve().is_file():
         raise ValueError(...)
-    return True
 
 class FileReader:
 
