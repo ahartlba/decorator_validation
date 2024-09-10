@@ -1,6 +1,6 @@
 import inspect
 from typing import Callable, Tuple, Union, Any
-from decorator_validation.types import SkipTypeCheck
+from .types import SkipTypeCheck
 
 
 class Validator:
