@@ -1,7 +1,7 @@
 import unittest
 from typing import Dict, Union, Sequence
-from decorator_validation.decorators import check_types
-from decorator_validation.types import SkipTypeCheck
+from decorator_validation import check_types
+from decorator_validation import SkipTypeCheck
 from decorator_validation.std_validators import is_sequence_of
 import logging
 import platform
@@ -32,6 +32,18 @@ class TestCheckTypes(unittest.TestCase):
             logging.error(e)
         self.assertEqual(worked, True)
 
+    def test_correct_types_only_args_no_braces(self):
+        @check_types
+        def foo(bar: int, message: str, some_additional_info: Dict):
+            return True
+
+        try:
+            worked = foo(3, "some string", dict())
+        except Exception as e:
+            worked = False
+            logging.error(e)
+        self.assertEqual(worked, True)
+
     def test_correct_types_mix_args_kwargs(self):
         @check_types()
         def foo(bar: int, message: str, some_additional_info: Dict):
@@ -49,6 +61,19 @@ class TestCheckTypes(unittest.TestCase):
 
     def test_uncorrect_types(self):
         @check_types()
+        def foo(bar: int, message: str, some_additional_info: Dict):
+            return True
+
+        try:
+            _ = foo(dict(bar=3.2, message="some string", some_additional_info=dict()))
+        except TypeError:
+            worked = True
+        else:
+            worked = False
+        self.assertEqual(worked, True)
+
+    def test_uncorrect_types_no_braces(self):
+        @check_types
         def foo(bar: int, message: str, some_additional_info: Dict):
             return True
 

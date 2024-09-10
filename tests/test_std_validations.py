@@ -1,5 +1,5 @@
 import unittest
-from decorator_validation.decorators import validate_map, validate
+from decorator_validation.decorators import check_types
 from decorator_validation.std_validators import is_file, is_iterable_of, is_sequence_of, is_num_as_str
 import logging
 from pathlib import Path
@@ -23,7 +23,7 @@ class TempFile:
 
 class TestStandardValidations(unittest.TestCase):
     def test_is_file_correct(self):
-        @validate_map(file=is_file)
+        @check_types(file=is_file)
         def foo(file: str):
             return True
 
@@ -37,7 +37,7 @@ class TestStandardValidations(unittest.TestCase):
         self.assertEqual(worked, True)
 
     def test_is_file_not_correct(self):
-        @validate_map(file=is_file)
+        @check_types(file=is_file)
         def foo(file: str):
             return True
 
@@ -51,20 +51,20 @@ class TestStandardValidations(unittest.TestCase):
         self.assertNotEqual(worked, True)
 
     def test_is_iterable_of_correct(self):
-        @validate(bar=is_iterable_of(str))
+        @check_types(bar=is_iterable_of(str))
         def foo(bar: Iterable[str]):
             return True
 
         self.assertEqual(foo(["a", "b", "c"]), True)
 
-        @validate(foo=is_iterable_of((int, float)))
+        @check_types(foo=is_iterable_of((int, float)))
         def bar(foo: Iterable[Union[int, float]]):
             return True
 
         self.assertEqual(bar((1, 2, 4.3, 3.6)), True)
 
     def test_is_iterable_of_incorrect(self):
-        @validate(bar=is_iterable_of(str))
+        @check_types(bar=is_iterable_of(str))
         def foo(bar: Iterable[str]):
             return True
 
@@ -75,7 +75,7 @@ class TestStandardValidations(unittest.TestCase):
             TypeError
         self.assertEqual(result, False)
 
-        @validate(foo=is_iterable_of((int, float)))
+        @check_types(foo=is_iterable_of((int, float)))
         def bar(foo: Iterable[Union[int, float]]):
             return True
 
@@ -87,20 +87,20 @@ class TestStandardValidations(unittest.TestCase):
         self.assertEqual(result, False)
 
     def test_is_sequence_of_correct(self):
-        @validate(bar=is_sequence_of(str))
+        @check_types(bar=is_sequence_of(str))
         def foo(bar: Sequence[str]):
             return True
 
         self.assertEqual(foo(["a", "b", "c"]), True)
 
-        @validate(foo=is_sequence_of((int, float)))
+        @check_types(foo=is_sequence_of((int, float)))
         def bar(foo: Sequence[Union[int, float]]):
             return True
 
         self.assertEqual(bar((1, 2, 4.3, 3.6)), True)
 
     def test_is_sequence_of_incorrect(self):
-        @validate(bar=is_sequence_of(str))
+        @check_types(bar=is_sequence_of(str))
         def foo(bar: Sequence[str]):
             return True
 
@@ -111,7 +111,7 @@ class TestStandardValidations(unittest.TestCase):
             TypeError
         self.assertEqual(result, False)
 
-        @validate(foo=is_sequence_of((int, float)))
+        @check_types(foo=is_sequence_of((int, float)))
         def bar(foo: Sequence[Union[int, float]]):
             return True
 
@@ -139,7 +139,7 @@ class TestStandardValidations(unittest.TestCase):
                     return self.cnt
                 raise StopIteration
 
-        @validate(bar=is_iterable_of(int))
+        @check_types(bar=is_iterable_of(int))
         def foo(bar: Iterable[int]):
             return True
 
@@ -150,7 +150,7 @@ class TestStandardValidations(unittest.TestCase):
             TypeError
         self.assertEqual(result, True)
 
-        @validate(foo=is_sequence_of(int))
+        @check_types(foo=is_sequence_of(int))
         def bar(foo: Sequence[int]):
             return True
 
@@ -162,7 +162,7 @@ class TestStandardValidations(unittest.TestCase):
         self.assertEqual(result, False)
 
     def test_num_as_str(self):
-        @validate(number=is_num_as_str)
+        @check_types(number=is_num_as_str)
         def foo(number: str):
             return True
 
