@@ -1,7 +1,7 @@
 from functools import wraps
+from typing import Callable, Any
 import inspect
 from .helpers import Annotation
-
 
 
 class check_types:
@@ -54,3 +54,15 @@ class check_types:
             return func(*args, **kwargs)
 
         return inner
+
+
+def make_validator(func: Callable[[Any], None]) -> Callable[[Any], bool]:
+    """takes in function that raises error for wrong type and makes it return
+    True if no exception occurs"""
+
+    @wraps(func)
+    def inner(*args, **kwargs):
+        func(*args, **kwargs)
+        return True
+
+    return inner
