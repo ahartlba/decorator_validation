@@ -9,7 +9,7 @@ class Validator:
     TYPECHECK = 0
     CALLABLE_CHECK = 1
 
-    def __init__(self, validator: Union[Tuple[type], Callable[[Any], bool]]):
+    def __init__(self, validator: Union[type, Tuple[type], Callable[[Any], bool]]):
         """initialize validator
 
         Parameters
@@ -17,6 +17,8 @@ class Validator:
         validator : Union[Tuple[type], Callable[[Any], bool]]
             tuple of possible types (like int, float, str, ...) or callable that verifies correctness of type
         """
+        if isinstance(validator, type):
+            validator = (validator,)
         self.validator = validator
 
     def validate(self, input) -> Tuple[int, bool]:
@@ -39,7 +41,7 @@ class Annotation:
     OVERRIDE = 0
     SIGNATURE = 1
 
-    def __init__(self, annotation, type):
+    def __init__(self, annotation, type_):
         """instantiate annotation
 
         Parameters
@@ -50,7 +52,7 @@ class Annotation:
             Either Annotation.OVERRIDE or Annotation.SIGNATURE
         """
         self.annotation = annotation
-        self.type = type
+        self.type = type_
 
     def type_error_occured(self, input) -> bool:
         if self.type == Annotation.SIGNATURE:
@@ -62,6 +64,11 @@ class Annotation:
             #
             validator = Validator(self.annotation)
             type_of_check, res = validator.validate(input)
+
+            # allow single typing
+            if  isinstance(self.annotation, type):
+                self.annotation = (self.annotation,)
+
             if type_of_check == Validator.TYPECHECK and SkipTypeCheck in self.annotation:
                 return False
             return not res
