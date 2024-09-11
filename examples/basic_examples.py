@@ -12,7 +12,9 @@ foo(2, 2, 3.3)  # returns 6
 foo(2.0, 3)  # raises TypeError as argument a has no correct type
 
 # to overwrite args pass in key mappings to the decorator.
-# Types have to be wrapped with a tuple
+# multiple types have to be wrapped with a tuple.
+# also if the type-hint is not of type 'type' a tuple is necessary
+# in case of validator functions, no tuple is necessary (see below)
 
 
 @check_types(b=(int, float))

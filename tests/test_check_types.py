@@ -59,6 +59,38 @@ class TestCheckTypes(unittest.TestCase):
             logging.error(e)
         self.assertEqual(worked, True)
 
+    def test_types_mix_args_kwargs_overwrite(self):
+        @check_types(some_additional_info=(Dict,))
+        def foo(bar: int, message: str, some_additional_info: Dict):
+            return True
+        worked = False
+        try:
+            worked = foo(
+                3,
+                some_additional_info=dict(),
+                message="some string",
+            )
+        except Exception as e:
+            logging.error(e)
+        self.assertEqual(worked, True)
+
+    def test_for_class(self):
+        class Something:
+            ...
+        @check_types(some_additional_info=Something)
+        def foo(bar: int, message: str, some_additional_info: Dict):
+            return True
+        worked = False
+        try:
+            worked = foo(
+                3,
+                some_additional_info=Something(),
+                message="some string",
+            )
+        except Exception as e:
+            logging.error(e)
+        self.assertEqual(worked, True)
+
     def test_uncorrect_types(self):
         @check_types()
         def foo(bar: int, message: str, some_additional_info: Dict):
@@ -114,7 +146,7 @@ class TestCheckTypes(unittest.TestCase):
 
     def test_cls_and_obj_stuff(self):
         class Test:
-            @check_types()
+            @check_types(k=int)
             def __init__(self, k: int):
                 pass
 
@@ -153,7 +185,14 @@ class TestCheckTypes(unittest.TestCase):
         def print_elmnts(bar: Sequence[int]):
             for b in bar:
                 ...
-            return True
+        print_elmnts([1, 2, 3])
+
+    def test_other_types_no_braces(self):
+        @check_types(bar=SkipTypeCheck)
+        def print_elmnts(bar: Sequence[int]):
+            for b in bar:
+                ...
+        print_elmnts([1, 2, 3])
 
         @check_types(bar=is_sequence_of(int))
         def print_elmnts_2(bar: Sequence[int]):

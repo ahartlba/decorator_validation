@@ -5,7 +5,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/decorator-validation)
 [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
 
-Simple and fast type-checking and parameter validation.
+Simple and fast type-checking and parameter validation at runtime.
 
 Install with
 
@@ -41,9 +41,28 @@ def foo(bar: int, message: str, some_additional_info: dict):
     # begin to code
 ```
 
+The ``check_types`` decorator takes override kwargs to overwrite the type-hints
+
+```python
+@check_types(bar=float, message=(str, bytes))
+def foo(bar: int, message: str, some_additional_info: dict):
+    # begin to code
+```
+
+although this is more usefull to skip a check with
+
+```python
+from decorator_validation import check_types, SkipTypeCheck
+
+@check_types(message=SkipTypeCheck)
+def foo(bar: int, message: str, some_additional_info: dict):
+    # begin to code
+```
+
 Checkout the codebase for more examples and built in decorators!
 
 > **NOTE**: `check_types` has limitations for python versions lower than 3.10 due to lack of built in language support for type-checking. Use with caution with special types and None-Types!
+> Furthermore wrap types inside of tuples if they are not of type type!
 
 ## More Example
 
@@ -101,7 +120,7 @@ from decorator_validation.std_validators import is_file
 
 class Logger:
 
-    @check_types(file_path=is_file, message=(SkipTypeCheck,))
+    @check_types(file_path=is_file, message=SkipTypeCheck)
     def log(file_path: str, message: str, repeat: int = 1):
         ...
 
