@@ -36,7 +36,8 @@ class check_types:
                 # type does not match the annotation
                 if annotation.type_error_occured(arg):
                     raise TypeError(
-                        f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}"
+                        f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}\n"
+                        + "Make sure your custom validator did not fail if you used one!"
                     )
 
             # check all kwargs
@@ -49,7 +50,8 @@ class check_types:
                 # type does not match the annotation
                 if annotation.type_error_occured(v):
                     raise TypeError(
-                        f"TypeError for Parameter {k}: input_type: {type(v)}: required: {annotation.annotation}\nMake sure your custom validator did not fail if you used one!"
+                        f"TypeError for Parameter {k}: input_type: {type(v)}: required: {annotation.annotation}\n"
+                        + "Make sure your custom validator did not fail if you used one!"
                     )
             return func(*args, **kwargs)
 
