@@ -34,9 +34,9 @@ class check_types:
                     annotation = Annotation(override, Annotation.OVERRIDE)  # override instead of signature
 
                 # type does not match the annotation
-                if annotation.type_error_occured(arg):
+                if not annotation.matches(arg):
                     raise TypeError(
-                        f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {param.annotation}\n"
+                        f"TypeError for Parameter {param.name}: input_type: {type(arg)}: required: {annotation.annotation}\n"
                         + "Make sure your custom validator did not fail if you used one!"
                     )
 
@@ -48,7 +48,7 @@ class check_types:
                     annotation = Annotation(self._override_kwargs[k], Annotation.OVERRIDE)
 
                 # type does not match the annotation
-                if annotation.type_error_occured(v):
+                if not annotation.matches(v):
                     raise TypeError(
                         f"TypeError for Parameter {k}: input_type: {type(v)}: required: {annotation.annotation}\n"
                         + "Make sure your custom validator did not fail if you used one!"

@@ -54,21 +54,21 @@ class Annotation:
         self.annotation = annotation
         self.type = type_
 
-    def type_error_occured(self, input) -> bool:
+    def matches(self, arg) -> bool:
         if self.type == Annotation.SIGNATURE:
             # in case of default signature: check if type matches annotation
             # in case of no annotation -> ok
-            return not self.annotation == inspect._empty and not isinstance(input, self.annotation)
+            return self.annotation == inspect._empty or isinstance(arg, self.annotation)
         elif self.type == Annotation.OVERRIDE:
             # when override create validator object
             #
             validator = Validator(self.annotation)
-            type_of_check, res = validator.validate(input)
+            type_of_check, res = validator.validate(arg)
 
             # allow single typing
             if  isinstance(self.annotation, type):
                 self.annotation = (self.annotation,)
 
             if type_of_check == Validator.TYPECHECK and SkipTypeCheck in self.annotation:
-                return False
-            return not res
+                return True
+            return res
