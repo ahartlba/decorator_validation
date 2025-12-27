@@ -28,9 +28,7 @@ class Validator:
         else:
             type_of_check = self.CALLABLE_CHECK
             valid = True
-            if self.validator is None:
-                valid = True
-            else:
+            if self.validator is not None:
                 valid = self.validator(input)
         return type_of_check, valid
 
